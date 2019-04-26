@@ -1,0 +1,94 @@
+import router from '../router';
+import HTTP from '../http';
+
+export default {
+    namespaced: true,
+    state: {
+        registerName: null,
+        registerEmail: null,
+        registerPassword: null,
+        registerError: null,
+        loginEmail: null,
+        loginPassword: null,
+        loginError: null,
+        token: null,
+    },
+    getters: {
+        isLoggedIn(state) {
+            return !!state.token;
+        }
+    },
+    mutations: {
+        setRegisterName(state, name) {
+            state.registerName = name;
+        },
+        setRegisterEmail(state, email) {
+            state.registerEmail = email;
+        },
+        setRegisterPassword(state, password) {
+            state.registerPassword = password;
+        },
+        setRegisterError(state, error) {
+            state.registerError = error;
+        },
+        setLoginEmail(state, email) {
+            state.loginEmail = email;
+        },
+        setLoginPassword(state, password) {
+            state.loginPassword = password;
+        },
+        setLoginError(state, error) {
+            state.loginError = error;
+        },
+        setToken(state, token) {
+            state.token = token;
+        },
+    },
+    actions: {
+        logout({
+            commit
+        }) {
+            commit('setToken', null);
+            router.push('/login');
+        },
+        register({
+            state,
+            commit
+        }) {
+            commit('setRegisterError', null);
+            return HTTP().post('/register', {
+                    username: state.registerName,
+                    email: state.registerEmail,
+                    password: state.registerPassword,
+                })
+                .then(({
+                    data
+                }) => {
+                    commit('setToken', data.token);
+                    router.push('/');
+                })
+                .catch(() => {
+                    commit('setRegisterError', 'Invalid Reg. Information');
+                });
+        },
+        login({
+            state,
+            commit
+        }) {
+            commit('setLoginError', null);
+            return HTTP().post('/login', {
+                    email: state.loginEmail,
+                    password: state.loginPassword,
+                })
+                .then(({
+                    data
+                }) => {
+                    commit('setToken', data.token);
+                    router.push('/');
+                })
+                .catch(() => {
+                    commit('setLoginError', 'Invalid Login. Information');
+                });
+        }
+    },
+};
