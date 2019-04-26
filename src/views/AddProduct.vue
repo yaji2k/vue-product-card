@@ -5,21 +5,36 @@
         <Panel>
           <v-layout column wrap class="mt-4">
             <v-flex class="mt-4">
-              <v-text-field placeholder="product name"></v-text-field>
+              <v-text-field
+                placeholder="product name"
+                label="product name"
+                :value="newProduct.title"
+                @input="inputValue('title', $event)"
+              ></v-text-field>
             </v-flex>
             <v-flex class="mt-4">
               <v-layout row justify-space-around>
                 <v-flex xs2>
-                  <v-text-field placeholder="price"></v-text-field>
+                  <v-text-field
+                    placeholder="price"
+                    label="price"
+                    :value="newProduct.price"
+                    @input="inputValue('price', $event)"
+                  ></v-text-field>
                 </v-flex>
                 <v-flex xs2>
-                  <v-text-field placeholder="amount"></v-text-field>
+                  <v-text-field
+                    placeholder="amount"
+                    label="amount"
+                    :value="newProduct.amount"
+                    @input="inputValue('amount', $event)"
+                  ></v-text-field>
                 </v-flex>
               </v-layout>
             </v-flex>
 
             <v-flex xs4 class="text-xs-center mt-4">
-              <v-btn color="green" small dark>
+              <v-btn color="green" small dark @click="pushNewProduct">
                 <v-icon class="mr-2">add_circle</v-icon>Add Product
               </v-btn>
             </v-flex>
@@ -32,19 +47,27 @@
 
 <script>
 // @ is an alias to /src
-// import Projects from "@/components/Projects.vue";
-// import Tasks from "@/components/Tasks.vue";
-import { mapGetters, mapState } from "vuex";
-// import router from "../router";
+import { mapGetters, mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   beforeMount() {
-    if(!this.isAdmin) {
+    if (!this.isAdmin) {
       this.$router.push("/");
     }
   },
   computed: {
-    ...mapGetters("auth", ["isAdmin",]),
+    ...mapGetters("auth", ["isAdmin"]),
+    ...mapState("products", ["newProduct"])
+  },
+  methods: {
+    ...mapMutations("products", ["setNewProduct"]),
+    ...mapActions("products", ["pushNewProduct"]),
+    inputValue(name, value) {
+      this.setNewProduct({
+        name,
+        value
+      });
+    }
   }
 };
 </script>

@@ -1,12 +1,12 @@
 <template>
   <v-item-group>
     <v-container grid-list-md>
-      <v-layout wrap justify-center>
+      <v-layout wrap>
         <v-flex v-for="product in products" :key="product.id" xs12 md2>
           <v-item>
             <v-card @click="pushPage(product.id)">
-              <p>{{ product.title }}</p>
-              <p>{{ product.price }}</p>
+              <h2 class="py-3">{{ product.title }}</h2>
+              <p class="pb-3">price: {{ product.price }}</p>
             </v-card>
           </v-item>
         </v-flex>
@@ -20,7 +20,7 @@ import { mapActions, mapState, mapMutations } from "vuex";
 
 export default {
   computed: {
-    ...mapState("products", ["products"])
+    ...mapState("products", ["products"]),
   },
   methods: {
     ...mapActions("products", ["getProducts"]),
