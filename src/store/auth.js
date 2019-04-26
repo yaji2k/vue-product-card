@@ -12,10 +12,14 @@ export default {
         loginPassword: null,
         loginError: null,
         token: null,
+        isAdmin: false,
     },
     getters: {
         isLoggedIn(state) {
             return !!state.token;
+        },
+        isAdmin(state) {
+            return (!!state.token && state.isAdmin);
         }
     },
     mutations: {
@@ -43,6 +47,9 @@ export default {
         setToken(state, token) {
             state.token = token;
         },
+        setAdmin(state, isAdmin) {
+            state.isAdmin = isAdmin;
+        },
     },
     actions: {
         logout({
@@ -65,6 +72,7 @@ export default {
                     data
                 }) => {
                     commit('setToken', data.token);
+                    commit('setAdmin', data.is_admin);
                     router.push('/');
                 })
                 .catch(() => {
@@ -84,6 +92,7 @@ export default {
                     data
                 }) => {
                     commit('setToken', data.token);
+                    commit('setAdmin', data.is_admin);
                     router.push('/');
                 })
                 .catch(() => {
