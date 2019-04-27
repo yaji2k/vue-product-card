@@ -58,26 +58,23 @@ export default {
             commit('setToken', null);
             router.push('/login');
         },
-        register({
+        async register({
             state,
             commit
         }) {
             commit('setRegisterError', null);
-            return HTTP().post('/register', {
+            const { data } = await HTTP().post('/register', {
                     username: state.registerName,
                     email: state.registerEmail,
                     password: state.registerPassword,
-                })
-                .then(({
-                    data
-                }) => {
-                    commit('setToken', data.token);
-                    commit('setAdmin', data.is_admin);
-                    router.push('/');
-                })
-                .catch(() => {
-                    commit('setRegisterError', 'Invalid Reg. Information');
                 });
+            if(!data.success) {
+                commit('setRegisterError', data.e.detail);
+            } else {
+                commit('setToken', data.token);
+                commit('setAdmin', data.is_admin);
+                router.push('/');
+            };
         },
         login({
             state,

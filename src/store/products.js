@@ -9,6 +9,26 @@ export default {
         products: [],
         product: {},
         newProduct: {},
+        filter: [{
+                name: 'name',
+                sort: true,
+                fn: (a, b) => {
+                
+                    var A = a['title'].toLowerCase(),
+                        B = b['title'].toLowerCase();
+                    if (A < B) return -1;
+                    if (A > B) return 1;
+                    return 0;
+                }
+            },
+            {
+                name: 'price',
+                sort: true,
+                fn: (a, b) => {
+                    return a['price'] - b['price'];
+                }
+            },
+        ],
     },
     getters: {
 
@@ -36,12 +56,33 @@ export default {
             } = payLoad;
             Vue.set(state.newProduct, name, value);
         },
+        editProduct(state, payLoad) {
+            const {
+                name,
+                value
+            } = payLoad;
+            Vue.set(state.product, name, value);
+        },
         clearNewProduct(state, payLoad) {
             state.newProduct = payLoad;
         },
         removeProduct(state, product) {
-            state.products.splice(state.products.indexOf(product),1);
-        }
+            state.products.splice(state.products.indexOf(product), 1);
+        },
+        setEditMode(state, product) {
+            Vue.set(product, 'isEditMode', true);
+        },
+        unsetEditMode(state, product) {
+            Vue.set(product, 'isEditMode', false);
+        },
+        sortProducts(state, payLoad) {
+            const { key, reverse } = payLoad;       
+            if(reverse){
+                state.products.reverse();
+            } else {
+                state.products = state.products.sort(state.filter[key].fn);
+            }
+        },
     },
     actions: {
         getProducts({
@@ -51,33 +92,45 @@ export default {
                 .then(({
                     data
                 }) => {
-                    console.log(data.data);
                     commit('setProducts', data.data);
+                    commit('sortProducts', {
+                        key: 0,
+                        reverse: false
+                    });
                 });
         },
-        getProduct({
+        async getProduct({
             commit
         }, id) {
-            return HTTP().get(`/products/${id}`)
-                .then(({
-                    data
-                }) => {
-                    console.log(data);
-                    commit('setProduct', data);
-                });
+            const {
+                data
+            } = await HTTP().get(`/products/${id}`);
+            commit('setProduct', data);
+        },
+        async updateProduct({
+            commit
+        }, product) {
+            await HTTP().patch(`/products/${product.id}`, product);
+            commit('unsetEditMode', product);
         },
         async pushNewProduct({
             commit,
             state,
         }) {
-            const { data } = await HTTP().post(`/products/`, state.newProduct);
-            const { data: product } = await  HTTP().get(`/products/${data.product_id}`);
+            const {
+                data
+            } = await HTTP().post(`/products/`, state.newProduct);
+            const {
+                data: product
+            } = await HTTP().get(`/products/${data.product_id}`);
             commit("appendProduct", product);
             commit("clearNewProduct", {});
         },
-        async deleteProduct({commit}, product) {
+        async deleteProduct({
+            commit
+        }, product) {
             await HTTP().delete(`/products/${product.id}`);
-            commit("removeProduct",product);
+            commit("removeProduct", product);
             router.push("/");
         }
     }
