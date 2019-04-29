@@ -70,12 +70,12 @@ export default {
                     "comment": state.newComment.comment,
                     "rate": state.newComment.rate
                 })
+                if(!data.success) {
+                    throw new Error(data);
+                }
                 dispatch("getComments");
                 commit("clearNewComment", {});
-                throw new Error(data);
-            } catch(e) {
-               
-                console.log(e.response.data.e);
+            } catch (e) {
                 commit("setCommitError", e.response.data.e);
             }
         },
