@@ -25,14 +25,9 @@ export default {
         },
     },
     actions: {
-        getComments({ commit}, id) {
-            return HTTP().get(`/comments/${id}`)
-                .then(({
-                    data
-                }) => {
-                    console.log(data.data);
-                    commit('setComments', data.data);
-                });
+        async getComments({ commit, rootState}) {
+            const { data } = await HTTP().get(`/comments/${rootState.products.product.id}`);
+            commit('setComments', data); 
         },
     }
 }

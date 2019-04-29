@@ -13,7 +13,7 @@ export default {
                 name: 'name',
                 sort: true,
                 fn: (a, b) => {
-                
+
                     var A = a['title'].toLowerCase(),
                         B = b['title'].toLowerCase();
                     if (A < B) return -1;
@@ -76,8 +76,11 @@ export default {
             Vue.set(product, 'isEditMode', false);
         },
         sortProducts(state, payLoad) {
-            const { key, reverse } = payLoad;       
-            if(reverse){
+            const {
+                key,
+                reverse
+            } = payLoad;
+            if (reverse) {
                 state.products.reverse();
             } else {
                 state.products = state.products.sort(state.filter[key].fn);
@@ -100,7 +103,8 @@ export default {
                 });
         },
         async getProduct({
-            commit
+            commit,
+            state
         }, id) {
             const {
                 data
