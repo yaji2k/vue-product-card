@@ -8,6 +8,7 @@ export default {
         comments: [],
         comment: {},
         newComment: {},
+        CommitError: null,
     },
     getters: {
 
@@ -38,8 +39,13 @@ export default {
                 ...state.newComment,
                 ...payload
             };
-            // Vue.set(state.newComment, name, value);
-        }
+        },
+        clearNewComment(state, payload) {
+            state.newComment = payload;
+        },
+        setCommitError(state, error) {
+            state.CommitError = error;
+        },
     },
     actions: {
         async getComments({
@@ -57,13 +63,21 @@ export default {
             dispatch,
             rootState
         }) {
-            const {
-                data
-            } = await HTTP().post(`/comments/${rootState.products.product.id}`, {
-                "comment": state.newComment.comment,
-                "rate": state.newComment.rate
-            });
-            dispatch("getComments");
+            try {
+                const {
+                    data
+                } = await HTTP().post(`/comments/${rootState.products.product.id}`, {
+                    "comment": state.newComment.comment,
+                    "rate": state.newComment.rate
+                })
+                dispatch("getComments");
+                commit("clearNewComment", {});
+                throw new Error(data);
+            } catch(e) {
+               
+                console.log(e.response.data.e);
+                commit("setCommitError", e.response.data.e);
+            }
         },
         async deleteComment({
             commit

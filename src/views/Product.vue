@@ -54,8 +54,8 @@
             </v-flex>
           </v-layout>
         </v-card>
-        <Comments :comments="comments" v-if="isLoggedIn">
-          <AddComment :newComment="newComment" @onInput="editNewC($event)" @addComment ="addComment"/>
+        <Comments :comments="comments" :isAdmin="isAdmin" @onDelete="deleteComment($event)" v-if="isLoggedIn">
+          <AddComment :CommitError="CommitError" :newComment="newComment" @onInput="editNewC($event)" @addComment ="addComment"/>
         </Comments>
       </template>
       <template v-else>
@@ -88,12 +88,12 @@ export default {
   props: ["id"],
   computed: {
     ...mapState("products", ["product"]),
-    ...mapState("comments", ["comments", "newComment"]),
+    ...mapState("comments", ["comments", "newComment", "CommitError"]),
     ...mapGetters("auth", ["isAdmin", "isLoggedIn"]),
   },
   methods: {
     ...mapActions("products", ["getProduct", "deleteProduct", "updateProduct"]),
-    ...mapActions("comments", ["getComments", "addComment"]),
+    ...mapActions("comments", ["getComments", "addComment", "deleteComment"]),
     ...mapMutations("products", [
       "setEditMode",
       "unsetEditMode",

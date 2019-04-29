@@ -28,6 +28,7 @@
                 <v-btn color="green" dark @click="$emit('addComment')">send</v-btn>
               </v-flex>
             </v-layout>
+            <v-alert type="error" :value="CommitError">{{ CommitError }}</v-alert>
           </v-flex>
         </v-layout>
       </v-flex>
@@ -36,7 +37,7 @@
 </template>
 <script>
 export default {
-  props: ["newComment"],
+  props: ["newComment", "CommitError"],
   methods: {
     onInput(name, event) {
       this.$emit("onInput", {
