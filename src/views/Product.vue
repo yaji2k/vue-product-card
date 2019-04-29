@@ -55,7 +55,7 @@
           </v-layout>
         </v-card>
         <Comments :comments="comments" v-if="isLoggedIn">
-          <AddComment/>
+          <AddComment :newComment="newComment" @onInput="editNewC($event)" @addComment ="addComment"/>
         </Comments>
       </template>
       <template v-else>
@@ -88,22 +88,26 @@ export default {
   props: ["id"],
   computed: {
     ...mapState("products", ["product"]),
-    ...mapState("comments", ["comments"]),
-    ...mapGetters("auth", ["isAdmin", "isLoggedIn"])
+    ...mapState("comments", ["comments", "newComment"]),
+    ...mapGetters("auth", ["isAdmin", "isLoggedIn"]),
   },
   methods: {
     ...mapActions("products", ["getProduct", "deleteProduct", "updateProduct"]),
-    ...mapActions("comments", ["getComments"]),
+    ...mapActions("comments", ["getComments", "addComment"]),
     ...mapMutations("products", [
       "setEditMode",
       "unsetEditMode",
       "editProduct"
     ]),
+    ...mapMutations("comments", ["editNewComment"]),
     inputProduct(name, value) {
       this.editProduct({
         name,
         value
       });
+    },
+    editNewC(event) {
+     this.editNewComment(event);
     }
   },
   beforeMount() {
