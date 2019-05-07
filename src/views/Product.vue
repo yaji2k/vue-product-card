@@ -54,8 +54,14 @@
             </v-flex>
           </v-layout>
         </v-card>
-        <Comments :comments="comments" :isAdmin="isAdmin" @onDelete="deleteComment($event)" v-if="isLoggedIn">
-          <AddComment :CommitError="CommitError" :newComment="newComment" @onInput="editNewC($event)" @addComment ="addComment"/>
+        <Comments :comments="comments" :isAdmin="isAdmin" @onDelete="deleteComment($event)">
+          <AddComment
+            :CommitError="CommitError"
+            :newComment="newComment"
+            @onInput="editNewC($event)"
+            @addComment="addComment"
+            v-if="isLoggedIn"
+          />
         </Comments>
       </template>
       <template v-else>
@@ -78,7 +84,7 @@ import { mapState, mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   components: {
     Comments,
-    AddComment,
+    AddComment
   },
   data() {
     return {
@@ -89,7 +95,7 @@ export default {
   computed: {
     ...mapState("products", ["product"]),
     ...mapState("comments", ["comments", "newComment", "CommitError"]),
-    ...mapGetters("auth", ["isAdmin", "isLoggedIn"]),
+    ...mapGetters("auth", ["isAdmin", "isLoggedIn"])
   },
   methods: {
     ...mapActions("products", ["getProduct", "deleteProduct", "updateProduct"]),
@@ -107,7 +113,7 @@ export default {
       });
     },
     editNewC(event) {
-     this.editNewComment(event);
+      this.editNewComment(event);
     }
   },
   beforeMount() {
