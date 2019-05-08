@@ -11,6 +11,17 @@
             @input="inputProduct('title', $event)"
           ></v-text-field>
         </h2>
+        <p>
+          <v-rating
+            :value="rating"
+            color="yellow darken-3"
+            background-color="grey darken-1"
+            empty-icon="$vuetify.icons.ratingFull"
+            half-increments
+            readonly
+            small
+          ></v-rating>
+        </p>
       </v-flex>
       <v-flex text-sm-left>
         <v-card-text>
@@ -46,10 +57,8 @@
 </template>
 
 <script>
-
-
 export default {
-  props: ["id", "product", "isAdmin", "isEditMode"],
+  props: ["id", "product", "isAdmin", "isEditMode", "rating"],
   methods: {
     inputProduct(name, value) {
       this.$emit("input", {
@@ -75,6 +84,9 @@ export default {
 }
 .input {
   display: inline-block;
+}
+p {
+  margin: 0;
 }
 </style>
 

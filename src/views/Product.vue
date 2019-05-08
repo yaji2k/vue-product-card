@@ -4,6 +4,7 @@
       <template v-if="product">
         <Product :product="product"
                   :isAdmin="isAdmin"
+                  :rating="getRating"
                   @input="inputProduct($event)"
                   @delete="deleteProduct($event)"
                   @edit="setEditMode($event)"
@@ -52,7 +53,18 @@ export default {
   computed: {
     ...mapState("products", ["product"]),
     ...mapState("comments", ["comments", "newComment", "CommitError"]),
-    ...mapGetters("auth", ["isAdmin", "isLoggedIn"])
+    ...mapGetters("auth", ["isAdmin", "isLoggedIn"]),
+    getRating() {
+      let sum = 0;
+      let count = 0;
+      this.comments.forEach(element => {
+        if(element.rate) {
+          sum +=element.rate;
+          count++;
+        }
+      });
+      return sum/count;
+    }
   },
   methods: {
     ...mapActions("products", ["getProduct", "deleteProduct", "updateProduct"]),
