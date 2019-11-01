@@ -2,7 +2,7 @@
   <v-container>
     <v-layout row wrap>
       <v-flex xs6 offset-xs3>
-        <h1>Login2!!!</h1>
+        <h1>Login3!!!</h1>
         <v-text-field
           label="Email"
           placeholder="Email"
